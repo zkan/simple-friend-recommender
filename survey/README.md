@@ -1,7 +1,7 @@
 # Simple Friend Recommender
 
-## Running Tests
+## Running Flake8 and Tests
 
 ```sh
-pytest
+flake8 && pytest
 ```

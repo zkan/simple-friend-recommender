@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views import View
 
@@ -30,20 +29,28 @@ class Question1View(View):
 
 
 class Question2View(View):
+    template_name = 'question_2.html'
+
     def get(self, request):
-        return HttpResponse('Question 2')
+        return render(request, self.template_name)
 
 
 class Question3View(View):
+    template_name = 'question_3.html'
+
     def get(self, request):
-        return HttpResponse('Question 3')
+        return render(request, self.template_name)
 
 
 class Question4View(View):
+    template_name = 'question_4.html'
+
     def get(self, request):
-        return HttpResponse('Question 4')
+        return render(request, self.template_name)
 
 
 class Question5View(View):
+    template_name = 'question_5.html'
+
     def get(self, request):
-        return HttpResponse('Question 5')
+        return render(request, self.template_name)

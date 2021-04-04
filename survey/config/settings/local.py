@@ -3,6 +3,8 @@ import os
 from .base import * # noqa
 
 
+ALLOWED_HOSTS = ['*']
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',

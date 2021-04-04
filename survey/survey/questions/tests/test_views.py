@@ -45,11 +45,34 @@ class TestQuestion0View(TestCase):
 
 
 class TestQuestion1View(TestCase):
+    def setUp(self):
+        self.url = reverse('questions:question_1')
+
     def test_question_1_view_should_have_title(self):
-        url = reverse('questions:question_1')
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         assert '<title>Question 1</title>' in str(response.content)
-        assert 'Question 1 <a href="?choice=1">Hhhhh</a><a href="?choice=2">WWWW</a>' in str(response.content)
+
+    def test_question_1_view_should_data_engineer_vs_data_scientist(self):
+        response = self.client.get(self.url)
+        data_engineer_card = '<a href="">' \
+            '<div class="card border-light">' \
+            '<img src="/static/data-engineer.png" class="card-img-top">' \
+            '<div class="card-body text-center">' \
+            '<h5 class="card-title">Data Engineer</h5>' \
+            '</div>' \
+            '</div>' \
+            '</a>'
+        assert data_engineer_card in str(response.content)
+
+        data_scientist_card = '<a href="">' \
+            '<div class="card border-light">' \
+            '<img src="/static/data-scientist.png" class="card-img-top">' \
+            '<div class="card-body text-center">' \
+            '<h5 class="card-title">Data Scientist</h5>' \
+            '</div>' \
+            '</div>' \
+            '</a>'
+        assert data_scientist_card in str(response.content)
 
 
 class TestQuestion2View(TestCase):

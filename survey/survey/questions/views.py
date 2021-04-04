@@ -32,7 +32,7 @@ class Question1View(View):
             survey_response.answers['question-1'] = choice
             survey_response.save()
 
-            return redirect('questions:question_2')
+            return redirect(reverse('questions:question_2') + f'?name={name}')
 
         return render(
             request,
@@ -47,7 +47,22 @@ class Question2View(View):
     template_name = 'question_2.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        name = request.GET.get('name')
+        choice = request.GET.get('choice')
+        if name and choice:
+            survey_response, _ = SurveyResponse.objects.get_or_create(name=name)
+            survey_response.answers['question-2'] = choice
+            survey_response.save()
+
+            return redirect(reverse('questions:question_3') + f'?name={name}')
+
+        return render(
+            request,
+            self.template_name,
+            {
+                'name': name,
+            }
+        )
 
 
 class Question3View(View):

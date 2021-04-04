@@ -54,3 +54,10 @@ class Question5View(View):
 
     def get(self, request):
         return render(request, self.template_name)
+
+
+class ThankYouView(View):
+    template_name = 'thankyou.html'
+
+    def get(self, request):
+        return render(request, self.template_name)

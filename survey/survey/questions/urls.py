@@ -7,6 +7,7 @@ from survey.questions.views import (
     Question3View,
     Question4View,
     Question5View,
+    ThankYouView,
 )
 
 
@@ -18,4 +19,5 @@ urlpatterns = [
     path('3/', view=Question3View.as_view(), name='question_3'),
     path('4/', view=Question4View.as_view(), name='question_4'),
     path('5/', view=Question5View.as_view(), name='question_5'),
+    path('thankyou/', view=ThankYouView.as_view(), name='thankyou'),
 ]

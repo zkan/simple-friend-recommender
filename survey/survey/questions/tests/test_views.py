@@ -78,3 +78,10 @@ class TestQuestion5View(TestCase):
         url = reverse('questions:question_5')
         response = self.client.get(url)
         assert '<title>Question 5</title>' in str(response.content)
+
+
+class TestThankYouView(TestCase):
+    def test_thank_you_view_should_have_title(self):
+        url = reverse('questions:thankyou')
+        response = self.client.get(url)
+        assert '<title>Thank You</title>' in str(response.content)

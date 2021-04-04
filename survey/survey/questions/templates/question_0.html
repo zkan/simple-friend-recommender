@@ -1,21 +1,15 @@
-{% load static %}
-<html>
-  <head>
-    <title>Question 0</title>
-    <link href="{% static 'bootstrap-5.0.0-beta3-dist/css/bootstrap.min.css' %}" rel="stylesheet" />
-    <script src="{% static 'bootstrap-5.0.0-beta3-dist/js/bootstrap.bundle.min.js' %}"></script>
-  </head>
-  <body>
-    <div class="container">
-    {% spaceless %}
-      <form action="." method="GET">
-        <div class="mb-3">
-          <label for="name" class="form-label">Name</label>
-          <input id="name" type="text" class="form-control" name="name" />
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-    {% endspaceless %}
-    </div>
-  </body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Question 0{% endblock title %}
+
+{% block content %}
+  {% spaceless %}
+    <form action="." method="GET">
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input id="name" type="text" class="form-control" name="name" />
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  {% endspaceless %}
+{% endblock content %}

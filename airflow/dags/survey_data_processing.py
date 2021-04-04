@@ -1,4 +1,5 @@
 import csv
+import json
 
 from airflow.models import DAG
 from airflow.operators.dummy import DummyOperator
@@ -46,6 +47,14 @@ def _count_survey_answers():
     return f'{DAGS_FOLDER}/survey_answer_count.csv'
 
 
+def _transform_and_convert_into_csv(ti):
+    filepath = ti.xcom_pull(key='return_value', task_ids=['dump_survey_data'])[0]
+    columns = ['id', 'name', 'answers']
+    df = pd.read_csv(filepath, sep='\t', names=columns)
+    new_df = df.join(df['answers'].apply(json.loads).apply(pd.Series)).drop('answers', axis='columns')
+    new_df.to_csv(f'{DAGS_FOLDER}/survey_responses.csv', index=False)
+
+
 def _transform_data_for_recommender(ti):
     filepath = ti.xcom_pull(key='return_value', task_ids=['dump_survey_data'])[0]
     print(filepath)
@@ -59,7 +68,7 @@ default_args = {
 }
 with DAG(dag_id='survey_data_processing',
          default_args=default_args,
-         schedule_interval='*/5 * * * *',
+         schedule_interval='*/30 * * * *',
          catchup=False,
          tags=['ODDS']) as dag:
 
@@ -75,12 +84,15 @@ with DAG(dag_id='survey_data_processing',
         python_callable=_dump_survey_data,
     )
 
+    transform_and_convert_into_csv = PythonOperator(
+        task_id='transform_and_convert_into_csv',
+        python_callable=_transform_and_convert_into_csv,
+    )
+
     transform_data_for_recommender = PythonOperator(
         task_id='transform_data_for_recommender',
         python_callable=_transform_data_for_recommender,
     )
 
-    end = DummyOperator(task_id='end')
-
-    start >> [count_survey_answers, dump_survey_data] >> end
-    dump_survey_data >> transform_data_for_recommender
+    start >> count_survey_answers
+    start >> dump_survey_data >> transform_and_convert_into_csv >> transform_data_for_recommender

@@ -9,6 +9,7 @@ services:
       context: .
       dockerfile: ./compose/local/django/Dockerfile
     container_name: django
+    image: dataength/simple-friend-recommender
     restart: always
     depends_on:
       - db

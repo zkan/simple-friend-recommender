@@ -37,7 +37,7 @@ class TestQuestion0View(TestCase):
 
     def test_question_0_view_should_save_name_when_input_name(self):
         name = 'Kan'
-        self.client.get(self.url + f'?name={name}', follow=True)
+        self.client.get(self.url + f'?name={name}')
 
         survey_response = SurveyResponse.objects.get(name=name)
         assert survey_response.name == name
@@ -50,7 +50,7 @@ class TestQuestion0View(TestCase):
             answers={}
         )
 
-        self.client.get(self.url + f'?name={name}', follow=True)
+        self.client.get(self.url + f'?name={name}')
 
         survey_response = SurveyResponse.objects.filter(name=name)
 
@@ -65,9 +65,10 @@ class TestQuestion1View(TestCase):
         response = self.client.get(self.url)
         assert '<title>Question 1</title>' in str(response.content)
 
-    def test_question_1_view_should_data_engineer_vs_data_scientist(self):
-        response = self.client.get(self.url)
-        data_engineer_card = '<a href="">' \
+    def test_question_1_view_should_show_data_engineer_vs_data_scientist(self):
+        name = 'zkan'
+        response = self.client.get(self.url + f'?name={name}')
+        data_engineer_card = f'<a href="?name={name}&choice=data-engineer">' \
             '<div class="card border-light">' \
             '<img src="/static/data-engineer.png" class="card-img-top">' \
             '<div class="card-body text-center">' \
@@ -77,7 +78,7 @@ class TestQuestion1View(TestCase):
             '</a>'
         assert data_engineer_card in str(response.content)
 
-        data_scientist_card = '<a href="">' \
+        data_scientist_card = f'<a href="?name={name}&choice=data-scientist">' \
             '<div class="card border-light">' \
             '<img src="/static/data-scientist.png" class="card-img-top">' \
             '<div class="card-body text-center">' \
@@ -86,6 +87,64 @@ class TestQuestion1View(TestCase):
             '</div>' \
             '</a>'
         assert data_scientist_card in str(response.content)
+
+    def test_question_1_view_should_save_data_engineer_answer_for_responder(self):
+        name = 'Kan'
+        choice = 'data-engineer'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+        self.client.get(self.url + f'?name={name}&choice={choice}')
+
+        survey_response = SurveyResponse.objects.get(name=name)
+        assert survey_response.name == name
+
+        expected = {
+            'data-engineer': 1,
+            'data-scientist': 0,
+        }
+        assert survey_response.answers == expected
+
+    def test_question_1_view_should_save_data_scientist_answer_for_responder(self):
+        name = 'Kan'
+        choice = 'data-scientist'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+        self.client.get(self.url + f'?name={name}&choice={choice}')
+
+        survey_response = SurveyResponse.objects.get(name=name)
+        assert survey_response.name == name
+
+        expected = {
+            'data-engineer': 0,
+            'data-scientist': 1,
+        }
+        assert survey_response.answers == expected
+
+    def test_question_1_view_should_redirect_when_input(self):
+        name = 'Kan'
+        choice = 'data-engineer'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+        response = self.client.get(self.url + f'?name={name}&choice={choice}')
+
+        assert response.status_code == 302
+
+    def test_question_1_view_should_redirect_to_question_2_when_input(self):
+        name = 'Kan'
+        choice = 'data-engineer'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+        response = self.client.get(self.url + f'?name={name}&choice={choice}', follow=True)
+
+        assert '<title>Question 2</title>' in str(response.content)
 
 
 class TestQuestion2View(TestCase):

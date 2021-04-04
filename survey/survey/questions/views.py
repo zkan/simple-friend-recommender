@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views import View
 
+from .models import SurveyResponse
+
 
 class Question0View(View):
     template_name = 'question_0.html'
@@ -9,6 +11,8 @@ class Question0View(View):
     def get(self, request):
         name = request.GET.get('name')
         if name:
+            SurveyResponse.objects.create(name=name, answers={})
+
             return redirect('questions:question_1')
 
         return render(request, self.template_name)

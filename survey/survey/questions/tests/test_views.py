@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
 
+from ..models import SurveyResponse
+
 
 class TestQuestion0View(TestCase):
     def setUp(self):
@@ -32,6 +34,14 @@ class TestQuestion0View(TestCase):
         response = self.client.get(self.url + f'?name={name}', follow=True)
 
         assert '<title>Question 1</title>' in str(response.content)
+
+    def test_question_0_view_should_save_name_when_input_name(self):
+        name = 'Kan'
+        self.client.get(self.url + f'?name={name}', follow=True)
+
+        survey_response = SurveyResponse.objects.get(name=name)
+        assert survey_response.name == name
+        assert survey_response.answers == {}
 
 
 class TestQuestion1View(TestCase):

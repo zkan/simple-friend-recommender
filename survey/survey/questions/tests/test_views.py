@@ -14,13 +14,21 @@ class TestQuestion0View(TestCase):
 
     def test_question_0_view_should_have_form_for_submitting_name(self):
         response = self.client.get(self.url)
-        expected = '<form action="." method="GET">' \
-            '<div class="mb-3">' \
-            '<label for="name" class="form-label">Name</label>' \
+        expected = '<div style="padding: 1.5rem">' \
+            '<form action="." method="GET">' \
+            '<div class="row g-3 align-items-center">' \
+            '<div class="col-auto">' \
+            '<label for="name" class="col-form-label">Name</label>' \
+            '</div>' \
+            '<div class="col-auto">' \
             '<input id="name" type="text" class="form-control" name="name" />' \
             '</div>' \
+            '<div class="col-auto">' \
             '<button type="submit" class="btn btn-primary">Submit</button>' \
-            '</form>'
+            '</div>' \
+            '</div>' \
+            '</form>' \
+            '</div>'
         assert expected in str(response.content)
 
     def test_question_0_view_should_redirect_when_input_name(self):

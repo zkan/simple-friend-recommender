@@ -503,7 +503,13 @@ class TestQuestion5View(TestCase):
 
 
 class TestThankYouView(TestCase):
+    def setUp(self):
+        self.url = reverse('questions:thankyou')
+
     def test_thank_you_view_should_have_title(self):
-        url = reverse('questions:thankyou')
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         assert '<title>Thank You</title>' in str(response.content)
+
+    def test_thank_you_view_should_show_appreciation(self):
+        response = self.client.get(self.url)
+        assert '<h1 class="display-5 fw-bold">Thank You!</h1>' in str(response.content)

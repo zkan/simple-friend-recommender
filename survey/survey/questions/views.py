@@ -120,7 +120,7 @@ class Question5View(View):
             survey_response.answers['question-5'] = choice
             survey_response.save()
 
-            return redirect(reverse('questions:thankyou') + f'?name={name}')
+            return redirect('questions:thankyou')
 
         return render(
             request,

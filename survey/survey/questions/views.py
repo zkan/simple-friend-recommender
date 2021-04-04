@@ -113,7 +113,22 @@ class Question5View(View):
     template_name = 'question_5.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        name = request.GET.get('name')
+        choice = request.GET.get('choice')
+        if name and choice:
+            survey_response, _ = SurveyResponse.objects.get_or_create(name=name)
+            survey_response.answers['question-5'] = choice
+            survey_response.save()
+
+            return redirect(reverse('questions:thankyou') + f'?name={name}')
+
+        return render(
+            request,
+            self.template_name,
+            {
+                'name': name,
+            }
+        )
 
 
 class ThankYouView(View):

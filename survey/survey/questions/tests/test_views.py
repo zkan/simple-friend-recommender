@@ -414,10 +414,92 @@ class TestQuestion4View(TestCase):
 
 
 class TestQuestion5View(TestCase):
+    def setUp(self):
+        self.url = reverse('questions:question_5')
+
     def test_question_5_view_should_have_title(self):
-        url = reverse('questions:question_5')
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         assert '<title>Question 5</title>' in str(response.content)
+
+    def test_question_5_view_should_show_blackpink_vs_gong_yoo(self):
+        name = 'zkan'
+        response = self.client.get(self.url + f'?name={name}')
+
+        blackpink_card = f'<a href="?name={name}&choice=blackpink">' \
+            '<div class="card border-light">' \
+            '<img src="/static/blackpink.jpg" class="card-img-top">' \
+            '<div class="card-body text-center">' \
+            '<h5 class="card-title">Blackpink</h5>' \
+            '</div>' \
+            '</div>' \
+            '</a>'
+        assert blackpink_card in str(response.content)
+
+        gong_yoo_card = f'<a href="?name={name}&choice=gong-yoo">' \
+            '<div class="card border-light">' \
+            '<img src="/static/gong-yoo.jpg" class="card-img-top">' \
+            '<div class="card-body text-center">' \
+            '<h5 class="card-title">Gong Yoo</h5>' \
+            '</div>' \
+            '</div>' \
+            '</a>'
+        assert gong_yoo_card in str(response.content)
+
+    def test_question_5_view_should_save_blackpink_answer_for_responder(self):
+        name = 'Kan'
+        choice = 'blackpink'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+        self.client.get(self.url + f'?name={name}&choice={choice}')
+
+        survey_response = SurveyResponse.objects.get(name=name)
+        assert survey_response.name == name
+
+        expected = {
+            'question-5': 'blackpink',
+        }
+        assert survey_response.answers == expected
+
+    def test_question_5_view_should_save_gong_yoo_answer_for_responder(self):
+        name = 'Kan'
+        choice = 'gong-yoo'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+        self.client.get(self.url + f'?name={name}&choice={choice}')
+
+        survey_response = SurveyResponse.objects.get(name=name)
+        assert survey_response.name == name
+
+        expected = {
+            'question-5': 'gong-yoo',
+        }
+        assert survey_response.answers == expected
+
+    def test_question_5_view_should_redirect_when_input(self):
+        name = 'Kan'
+        choice = 'blankpink'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+        response = self.client.get(self.url + f'?name={name}&choice={choice}')
+
+        assert response.status_code == 302
+
+    def test_question_5_view_should_redirect_to_thank_you_when_input(self):
+        name = 'Kan'
+        choice = 'blackpink'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+        response = self.client.get(self.url + f'?name={name}&choice={choice}', follow=True)
+
+        assert '<title>Thank You</title>' in str(response.content)
 
 
 class TestThankYouView(TestCase):

@@ -325,10 +325,92 @@ class TestQuestion3View(TestCase):
 
 
 class TestQuestion4View(TestCase):
+    def setUp(self):
+        self.url = reverse('questions:question_4')
+
     def test_question_4_view_should_have_title(self):
-        url = reverse('questions:question_4')
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         assert '<title>Question 4</title>' in str(response.content)
+
+    def test_question_4_view_should_show_python_vs_java(self):
+        name = 'zkan'
+        response = self.client.get(self.url + f'?name={name}')
+
+        python_card = f'<a href="?name={name}&choice=python">' \
+            '<div class="card border-light">' \
+            '<img src="/static/python.png" class="card-img-top">' \
+            '<div class="card-body text-center">' \
+            '<h5 class="card-title">Python</h5>' \
+            '</div>' \
+            '</div>' \
+            '</a>'
+        assert python_card in str(response.content)
+
+        java_card = f'<a href="?name={name}&choice=java">' \
+            '<div class="card border-light">' \
+            '<img src="/static/java.png" class="card-img-top">' \
+            '<div class="card-body text-center">' \
+            '<h5 class="card-title">Java</h5>' \
+            '</div>' \
+            '</div>' \
+            '</a>'
+        assert java_card in str(response.content)
+
+    def test_question_4_view_should_save_python_answer_for_responder(self):
+        name = 'Kan'
+        choice = 'python'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+        self.client.get(self.url + f'?name={name}&choice={choice}')
+
+        survey_response = SurveyResponse.objects.get(name=name)
+        assert survey_response.name == name
+
+        expected = {
+            'question-4': 'python',
+        }
+        assert survey_response.answers == expected
+
+    def test_question_4_view_should_save_java_answer_for_responder(self):
+        name = 'Kan'
+        choice = 'java'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+        self.client.get(self.url + f'?name={name}&choice={choice}')
+
+        survey_response = SurveyResponse.objects.get(name=name)
+        assert survey_response.name == name
+
+        expected = {
+            'question-4': 'java',
+        }
+        assert survey_response.answers == expected
+
+    def test_question_4_view_should_redirect_when_input(self):
+        name = 'Kan'
+        choice = 'python'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+        response = self.client.get(self.url + f'?name={name}&choice={choice}')
+
+        assert response.status_code == 302
+
+    def test_question_4_view_should_redirect_to_question_5_when_input(self):
+        name = 'Kan'
+        choice = 'python'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+        response = self.client.get(self.url + f'?name={name}&choice={choice}', follow=True)
+
+        assert '<title>Question 5</title>' in str(response.content)
 
 
 class TestQuestion5View(TestCase):

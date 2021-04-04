@@ -69,7 +69,22 @@ class Question3View(View):
     template_name = 'question_3.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        name = request.GET.get('name')
+        choice = request.GET.get('choice')
+        if name and choice:
+            survey_response, _ = SurveyResponse.objects.get_or_create(name=name)
+            survey_response.answers['question-3'] = choice
+            survey_response.save()
+
+            return redirect(reverse('questions:question_4') + f'?name={name}')
+
+        return render(
+            request,
+            self.template_name,
+            {
+                'name': name,
+            }
+        )
 
 
 class Question4View(View):

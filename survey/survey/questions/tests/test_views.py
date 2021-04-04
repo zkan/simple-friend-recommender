@@ -236,10 +236,92 @@ class TestQuestion2View(TestCase):
 
 
 class TestQuestion3View(TestCase):
+    def setUp(self):
+        self.url = reverse('questions:question_3')
+
     def test_question_3_view_should_have_title(self):
-        url = reverse('questions:question_3')
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         assert '<title>Question 3</title>' in str(response.content)
+
+    def test_question_3_view_should_show_sea_vs_mountain(self):
+        name = 'zkan'
+        response = self.client.get(self.url + f'?name={name}')
+
+        sea_card = f'<a href="?name={name}&choice=sea">' \
+            '<div class="card border-light">' \
+            '<img src="/static/sea.png" class="card-img-top">' \
+            '<div class="card-body text-center">' \
+            '<h5 class="card-title">Sea</h5>' \
+            '</div>' \
+            '</div>' \
+            '</a>'
+        assert sea_card in str(response.content)
+
+        mountain_card = f'<a href="?name={name}&choice=mountain">' \
+            '<div class="card border-light">' \
+            '<img src="/static/mountain.png" class="card-img-top">' \
+            '<div class="card-body text-center">' \
+            '<h5 class="card-title">Mountain</h5>' \
+            '</div>' \
+            '</div>' \
+            '</a>'
+        assert mountain_card in str(response.content)
+
+    def test_question_3_view_should_save_sea_answer_for_responder(self):
+        name = 'Kan'
+        choice = 'sea'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+        self.client.get(self.url + f'?name={name}&choice={choice}')
+
+        survey_response = SurveyResponse.objects.get(name=name)
+        assert survey_response.name == name
+
+        expected = {
+            'question-3': 'sea',
+        }
+        assert survey_response.answers == expected
+
+    def test_question_3_view_should_save_mountain_answer_for_responder(self):
+        name = 'Kan'
+        choice = 'mountain'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+        self.client.get(self.url + f'?name={name}&choice={choice}')
+
+        survey_response = SurveyResponse.objects.get(name=name)
+        assert survey_response.name == name
+
+        expected = {
+            'question-3': 'mountain',
+        }
+        assert survey_response.answers == expected
+
+    def test_question_3_view_should_redirect_when_input(self):
+        name = 'Kan'
+        choice = 'sea'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+        response = self.client.get(self.url + f'?name={name}&choice={choice}')
+
+        assert response.status_code == 302
+
+    def test_question_3_view_should_redirect_to_question_3_when_input(self):
+        name = 'Kan'
+        choice = 'sea'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+        response = self.client.get(self.url + f'?name={name}&choice={choice}', follow=True)
+
+        assert '<title>Question 4</title>' in str(response.content)
 
 
 class TestQuestion4View(TestCase):

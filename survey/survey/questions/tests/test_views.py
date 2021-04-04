@@ -101,8 +101,7 @@ class TestQuestion1View(TestCase):
         assert survey_response.name == name
 
         expected = {
-            'data-engineer': 1,
-            'data-scientist': 0,
+            'question-1': 'data-engineer',
         }
         assert survey_response.answers == expected
 
@@ -119,8 +118,7 @@ class TestQuestion1View(TestCase):
         assert survey_response.name == name
 
         expected = {
-            'data-engineer': 0,
-            'data-scientist': 1,
+            'question-1': 'data-scientist',
         }
         assert survey_response.answers == expected
 

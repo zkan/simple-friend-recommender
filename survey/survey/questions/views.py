@@ -29,8 +29,7 @@ class Question1View(View):
         choice = request.GET.get('choice')
         if name and choice:
             survey_response, _ = SurveyResponse.objects.get_or_create(name=name)
-            survey_response.answers['data-engineer'] = 1 if choice == 'data-engineer' else 0
-            survey_response.answers['data-scientist'] = 1 if choice == 'data-scientist' else 0
+            survey_response.answers['question-1'] = choice
             survey_response.save()
 
             return redirect('questions:question_2')

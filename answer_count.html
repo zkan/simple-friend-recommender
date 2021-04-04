@@ -26,7 +26,7 @@
                 "translate(" + margin.left + "," + margin.top + ")");
 
       // Parse the Data
-      d3.csv("airflow/dags/answer_count.csv", function(data) {
+      d3.csv("airflow/dags/survey_answer_count.csv", function(data) {
         // X axis
         var x = d3.scaleBand()
           .range([ 0, width ])

@@ -10,7 +10,7 @@ class Question0View(View):
     def get(self, request):
         name = request.GET.get('name')
         if name:
-            SurveyResponse.objects.create(name=name, answers={})
+            SurveyResponse.objects.get_or_create(name=name, answers={})
 
             return redirect('questions:question_1')
 

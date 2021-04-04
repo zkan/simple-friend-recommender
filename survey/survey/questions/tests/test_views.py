@@ -43,6 +43,19 @@ class TestQuestion0View(TestCase):
         assert survey_response.name == name
         assert survey_response.answers == {}
 
+    def test_question_0_view_should_get_or_create_name_when_input_same_name(self):
+        name = 'Kan'
+        SurveyResponse.objects.create(
+            name=name,
+            answers={}
+        )
+
+        self.client.get(self.url + f'?name={name}', follow=True)
+
+        survey_response = SurveyResponse.objects.filter(name=name)
+
+        assert survey_response.count() == 1
+
 
 class TestQuestion1View(TestCase):
     def setUp(self):

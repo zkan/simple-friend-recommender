@@ -54,12 +54,22 @@ def _transform_and_convert_into_csv(ti):
     new_df = df.join(df['answers'].apply(json.loads).apply(pd.Series)).drop('answers', axis='columns')
     new_df.to_csv(f'{DAGS_FOLDER}/survey_responses.csv', index=False)
 
+    return f'{DAGS_FOLDER}/survey_responses.csv'
 
-def _transform_data_for_recommender(ti):
-    filepath = ti.xcom_pull(key='return_value', task_ids=['dump_survey_data'])[0]
-    print(filepath)
+
+def _transform_data_using_one_hot_encoding(ti):
+    filepath = ti.xcom_pull(key='return_value', task_ids=['transform_and_convert_into_csv'])[0]
     df = pd.read_csv(filepath)
-    print(df.T)
+    new_df = df.join(pd.get_dummies(df['question-1'])) \
+        .join(pd.get_dummies(df['question-2'])) \
+        .join(pd.get_dummies(df['question-3'])) \
+        .join(pd.get_dummies(df['question-4'])) \
+        .join(pd.get_dummies(df['question-5'])) \
+        .drop(['question-1', 'question-2', 'question-3', 'question-4', 'question-5'], axis='columns')
+
+    new_df.to_csv(f'{DAGS_FOLDER}/survey_responses_transformed.csv', index=False)
+
+    return f'{DAGS_FOLDER}/survey_responses_transformed.csv'
 
 
 default_args = {
@@ -89,10 +99,10 @@ with DAG(dag_id='survey_data_processing',
         python_callable=_transform_and_convert_into_csv,
     )
 
-    transform_data_for_recommender = PythonOperator(
-        task_id='transform_data_for_recommender',
-        python_callable=_transform_data_for_recommender,
+    transform_data_using_one_hot_encoding = PythonOperator(
+        task_id='transform_data_using_one_hot_encoding',
+        python_callable=_transform_data_using_one_hot_encoding,
     )
 
     start >> count_survey_answers
-    start >> dump_survey_data >> transform_and_convert_into_csv >> transform_data_for_recommender
+    start >> dump_survey_data >> transform_and_convert_into_csv >> transform_data_using_one_hot_encoding

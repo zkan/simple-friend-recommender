@@ -19,3 +19,14 @@ class TestSurveyResponse(TestCase):
 
         assert survey_response.name == name
         assert survey_response.answers == answers
+
+    def test_survey_response_should_set_empty_dict_as_default_for_answers(self):
+        name = 'Kan'
+        SurveyResponse.objects.create(
+            name=name,
+        )
+
+        survey_response = SurveyResponse.objects.get(name=name)
+
+        assert survey_response.name == name
+        assert survey_response.answers == {}

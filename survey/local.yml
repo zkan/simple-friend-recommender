@@ -1,0 +1,28 @@
+version: '3'
+
+volumes:
+  local_postgres_data: {}
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    container_name: django
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    command: /start
+
+  db:
+    image: postgres:13.2-alpine
+    container_name: postgres
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres

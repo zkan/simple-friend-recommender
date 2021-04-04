@@ -1,7 +1,32 @@
-<html>
-  <head>
-    <title>Question 2</title>
-  </head>
-  <body>
-  </body>
-</html>
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Question 2{% endblock title %}
+
+{% block content %}
+  {% spaceless %}
+  <div class="row">
+    <div class="col-6">
+      <a href="">
+        <div class="card border-light">
+          <img src="{% static 'cat.png' %}" class="card-img-top">
+          <div class="card-body text-center">
+            <h5 class="card-title">Cat</h5>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-6">
+      <a href="">
+        <div class="card border-light">
+          <img src="{% static 'dog.png' %}" class="card-img-top">
+          <div class="card-body text-center">
+            <h5 class="card-title">Dog</h5>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  {% endspaceless %}
+{% endblock content %}

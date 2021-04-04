@@ -1,7 +1,32 @@
-<html>
-  <head>
-    <title>Thank You</title>
-  </head>
-  <body>
-  </body>
-</html>
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Thank You{% endblock title %}
+
+{% block content %}
+  {% spaceless %}
+  <div class="row">
+    <div class="col-6">
+      <a href="">
+        <div class="card border-light">
+          <img src="{% static 'data-engineer.png' %}" class="card-img-top">
+          <div class="card-body text-center">
+            <h5 class="card-title">Data Engineer</h5>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-6">
+      <a href="">
+        <div class="card border-light">
+          <img src="{% static 'data-scientist.png' %}" class="card-img-top">
+          <div class="card-body text-center">
+            <h5 class="card-title">Data Scientist</h5>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  {% endspaceless %}
+{% endblock content %}

@@ -16,14 +16,14 @@ class TestQuestion0View(TestCase):
         response = self.client.get(self.url)
         expected = '<div style="padding: 1.5rem">' \
             '<form action="." method="GET">' \
-            '<div class="row g-3 align-items-center">' \
-            '<div class="col-auto">' \
+            '<div class="row g-3">' \
+            '<div class="col-2 col-md-auto">' \
             '<label for="name" class="col-form-label">Name</label>' \
             '</div>' \
-            '<div class="col-auto">' \
+            '<div class="col col-md-auto">' \
             '<input id="name" type="text" class="form-control" name="name" />' \
             '</div>' \
-            '<div class="col-auto">' \
+            '<div class="col-3 col-md-auto">' \
             '<button type="submit" class="btn btn-primary">Submit</button>' \
             '</div>' \
             '</div>' \

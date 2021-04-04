@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
+    <title>Survey Answer Count</title>
     <script src="https://d3js.org/d3.v4.js"></script>
   </head>
   <body>
-    <h1>Answer Count</h1>
+    <h1>Survey Answer Count</h1>
     <div id="my_dataviz"></div>
     <script>
       // Credit: https://www.d3-graph-gallery.com/graph/barplot_animation_start.html
@@ -40,7 +41,7 @@
 
         // Add Y axis
         var y = d3.scaleLinear()
-          .domain([0, 50])
+          .domain([0, 30])
           .range([ height, 0]);
         svg.append("g")
           .call(d3.axisLeft(y));

@@ -55,7 +55,7 @@ Then we go to http://localhost:8088/answer_count.html.
 
 ```sh
 cd airflow/dags/notebooks
-jupyter notebook
+jupyter notebook --ip=0.0.0.0
 ```
 
 Go to http://localhost:8888 if your Web browser is not automatically fired up.

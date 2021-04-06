@@ -80,7 +80,7 @@ with DAG(dag_id='survey_data_processing',
          default_args=default_args,
          schedule_interval='*/30 * * * *',
          catchup=False,
-         tags=['ODDS']) as dag:
+         tags=['dataength', 'ODDS']) as dag:
 
     start = DummyOperator(task_id='start')
 

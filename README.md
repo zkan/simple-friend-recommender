@@ -10,6 +10,13 @@ Project to demonstrate stuff a data engineer should know
 ./start.sh
 ```
 
+Then we can go to the survey with the following links:
+* http://localhost:8000/questions/0
+* http://localhost:8000/admin
+
+For Airflow UI, we go to:
+* http://localhost:8080
+
 ### Stopping the Project
 
 ```sh
@@ -51,7 +58,9 @@ cd airflow/dags/notebooks
 jupyter notebook
 ```
 
-We'll need to set up an virtual environment first under the folder `airflow/dags/notebooks` in case it hasn't been done.
+Go to http://localhost:8888 if your Web browser is not automatically fired up.
+
+Note that We'll need to set up an virtual environment first under the folder `airflow/dags/notebooks` in case it hasn't been done.
 
 ```sh
 python3 -m venv ENV

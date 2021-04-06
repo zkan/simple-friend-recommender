@@ -1,28 +1,21 @@
 from airflow.models import DAG
 from airflow.operators.dummy import DummyOperator
+from airflow.operators.python import PythonOperator
 from airflow.providers.papermill.operators.papermill import PapermillOperator
 from airflow.utils import timezone
+
+import pandas as pd
 
 
 DAGS_FOLDER = '/opt/airflow/dags'
 NOTEBOOKS_FOLDER = f'{DAGS_FOLDER}/notebooks'
 
-distance_columns = [
-    'data-engineer',
-    'data-scientist',
-    'cat',
-    'dog',
-    'data-engineer',
-    'data-scientist',
-    'cat',
-    'dog',
-    'mountain',
-    'sea',
-    'java',
-    'python',
-    'blackpink',
-    'gong-yoo',
-]
+
+def _get_distance_columns():
+    df = pd.read_csv(f'{DAGS_FOLDER}/survey_responses_transformed.csv')
+
+    return list(df.columns[2:])
+
 
 default_args = {
     'owner': 'zkan'
@@ -36,13 +29,21 @@ with DAG('friend_recommender',
 
     start = DummyOperator(task_id='start')
 
-    friend_recommender = PapermillOperator(
-        task_id='friend_recommender',
+    get_distance_columns = PythonOperator(
+        task_id='get_distance_columns',
+        python_callable=_get_distance_columns,
+    )
+
+    execute_friend_recommender = PapermillOperator(
+        task_id='execute_friend_recommender',
         input_nb=f'{NOTEBOOKS_FOLDER}/friend_recommender.ipynb',
         output_nb=f'{NOTEBOOKS_FOLDER}/friend_recommender_results.ipynb',
-        parameters=dict(DAGS_FOLDER=DAGS_FOLDER, distance_columns=distance_columns),
+        parameters=dict(
+            DAGS_FOLDER=DAGS_FOLDER,
+            distance_columns="{{ ti.xcom_pull(key='return_value', task_ids='get_distance_columns') }}"
+        ),
     )
 
     end = DummyOperator(task_id='end')
 
-    start >> friend_recommender >> end
+    start >> get_distance_columns >> execute_friend_recommender >> end

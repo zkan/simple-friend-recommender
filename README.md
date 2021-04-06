@@ -10,6 +10,8 @@ Project to demonstrate stuff a data engineer should know
 ./start.sh
 ```
 
+Note: If you're using Mac, run `./start-mac.sh` instead.
+
 Then we can go to the survey with the following links:
 * http://localhost:8000/questions/0
 * http://localhost:8000/admin
@@ -22,6 +24,8 @@ For Airflow UI, we go to:
 ```sh
 ./stop.sh
 ```
+
+Note: If you're using Mac, run `./stop-mac.sh` instead.
 
 ### Testing an Airflow Task
 

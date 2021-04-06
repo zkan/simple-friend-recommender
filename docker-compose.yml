@@ -18,6 +18,8 @@ x-airflow-common:
     - ./airflow-data/airflow.cfg:/opt/airlfow/airflow.cfg
   depends_on:
     - postgres
+  extra_hosts:
+    host.docker.internal: ${IP_ADDRESS}
 
 services:
   postgres:

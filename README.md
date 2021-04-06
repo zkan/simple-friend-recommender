@@ -33,3 +33,34 @@ In this talk, we'll set up 2 connections as follows:
 1. File system connection:
 
     ![Survey File Conn](survey_file_conn.png)
+
+### Starting a Simple Dashboard
+
+It shows an answer count.
+
+```sh
+python3 -m http.server 8088
+```
+
+Then we go to http://localhost:8088/answer_count.html.
+
+### Starting a Jupyter Server (Local)
+
+```sh
+cd airflow/dags/notebooks
+jupyter notebook
+```
+
+We'll need to set up an virtual environment first under the folder `airflow/dags/notebooks` in case it hasn't been done.
+
+```sh
+python3 -m venv ENV
+source ENV/bin/activate
+pip install -r requirements.txt
+```
+
+To deactivate, run:
+
+```sh
+deactivate
+```

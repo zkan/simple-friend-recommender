@@ -2,6 +2,7 @@ from airflow.models import DAG
 from airflow.operators.dummy import DummyOperator
 from airflow.operators.python import PythonOperator
 from airflow.providers.papermill.operators.papermill import PapermillOperator
+from airflow.sensors.filesystem import FileSensor
 from airflow.utils import timezone
 
 import pandas as pd
@@ -29,6 +30,12 @@ with DAG('friend_recommender',
 
     start = DummyOperator(task_id='start')
 
+    is_file_available = FileSensor(
+        task_id='is_file_available',
+        filepath='survey_responses_transformed.csv',
+        fs_conn_id='survey_file_conn',
+    )
+
     get_distance_columns = PythonOperator(
         task_id='get_distance_columns',
         python_callable=_get_distance_columns,
@@ -46,4 +53,4 @@ with DAG('friend_recommender',
 
     end = DummyOperator(task_id='end')
 
-    start >> get_distance_columns >> execute_friend_recommender >> end
+    start >> is_file_available >> get_distance_columns >> execute_friend_recommender >> end
